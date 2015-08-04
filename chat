@@ -79,6 +79,10 @@ __DATA__
           height:10em;
       }
     </style>
+    <script>
+      $('textarea').on('change',function(){
+      });
+    </script>
   </head>
 <body>
 
@@ -94,6 +98,7 @@ $(function () {
 
   var log = function (text) {
     $('#log').val( $('#log').val() + text + "\n");
+    $('#log').scrollTop($('#log').height());
   };
 
   var ws = new WebSocket('ws://localhost:3000/echo');
