@@ -101,7 +101,7 @@ $(function () {
     $('#log').scrollTop($('#log').height());
   };
 
-  var ws = new WebSocket('ws://localhost:3000/echo');
+  var ws = new WebSocket('ws://chat.dev.kit.cm/echo');
   ws.onopen = function () {
     log('Connection opened');
   };
