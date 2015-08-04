@@ -96,7 +96,7 @@ $(function () {
     $('#log').val( $('#log').val() + text + "\n");
   };
 
-  var ws = new WebSocket('ws://localhost:3000/echo');
+  var ws = new WebSocket('ws://chat.dev.kit.cm/echo');
   ws.onopen = function () {
     log('Connection opened');
   };
