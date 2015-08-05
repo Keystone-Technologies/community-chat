@@ -98,7 +98,7 @@ $(function () {
 
   var log = function (text) {
     $('#log').val( $('#log').val() + text + "\n");
-    $('#log').scrollTop($('#log').height());
+    $('#log').scrollTop($('#log')[0].scrollHeight);
   };
 
   var ws = new WebSocket('ws://chat.dev.kit.cm/echo');
