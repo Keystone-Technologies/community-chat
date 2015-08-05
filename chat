@@ -8,12 +8,15 @@ use Chatbot::Eliza
 # Seed the random number generator.
 srand( time ^ ($$ + ($$ << 15)) );      
 
-get '/' => 'index';
+get '/' => sub {
+  my $c = shift;
+  $c->session->{user} = $c->param('user');
+} => 'index';
 get '/js/ws' => 'ws';
 
 my $clients = {};
 
-my ($harry, $sally, $he_says, $she_says, $someone_says);
+my ($harry, $sally, $user, $he_says, $she_says, $user_says);
 
 websocket '/echo' => sub {
   my $self = shift;
@@ -25,14 +28,16 @@ websocket '/echo' => sub {
   $self->on(message => sub {
     my ($self, $msg) = @_;
 
-    $someone_says = $msg;
+    my $user = $self->session->{user} || 'John Doe';
+
+    $user_says = $msg;
 
     my $dt   = DateTime->now( time_zone => 'America/Chicago');
 
     for (keys %$clients) {
       $clients->{$_}->send({json => {
         hms  => $dt->hms,
-        text => $msg,
+        text => "$user: $msg",
       }});
     }
   });
@@ -49,12 +54,12 @@ $he_says  = "I am sad.";
 
 my $id = Mojo::IOLoop->recurring(3 => sub {
   my $self = shift;
-  $she_says = $sally->transform($someone_says || $he_says);
-  $someone_says = undef;
+  $she_says = $sally->transform($user_says || $he_says);
+  $user_says = undef;
   chat($sally->name.": $she_says");
   my $id = Mojo::IOLoop->timer(1 => sub {
-    $he_says = $harry->transform($someone_says || $she_says);
-    $someone_says = undef;
+    $he_says = $harry->transform($user_says || $she_says);
+    $user_says = undef;
     chat($harry->name.": $he_says");
   });
 });
