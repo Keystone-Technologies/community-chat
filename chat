@@ -9,46 +9,52 @@ use Chatbot::Eliza
 srand( time ^ ($$ + ($$ << 15)) );      
 
 get '/' => 'index';
+get '/js/ws' => 'ws';
 
 my $clients = {};
 
+my ($harry, $sally, $he_says, $she_says, $someone_says);
+
 websocket '/echo' => sub {
-    my $self = shift;
+  my $self = shift;
 
-    app->log->debug(sprintf 'Client connected: %s', $self->tx);
-    my $id = sprintf "%s", $self->tx;
-    $clients->{$id} = $self->tx;
+  app->log->debug(sprintf 'Client connected: %s', $self->tx);
+  my $id = sprintf "%s", $self->tx;
+  $clients->{$id} = $self->tx;
 
-    $self->on(message => sub {
-        my ($self, $msg) = @_;
+  $self->on(message => sub {
+    my ($self, $msg) = @_;
 
-        my $dt   = DateTime->now( time_zone => 'America/Chicago');
+    $someone_says = $msg;
 
-        for (keys %$clients) {
-            $clients->{$_}->send({json => {
-                hms  => $dt->hms,
-                text => $msg,
-            }});
-        }
-    });
+    my $dt   = DateTime->now( time_zone => 'America/Chicago');
 
-    $self->on(finish => sub {
-        app->log->debug('Client disconnected');
-        delete $clients->{$id};
-    });
+    for (keys %$clients) {
+      $clients->{$_}->send({json => {
+        hms  => $dt->hms,
+        text => $msg,
+      }});
+    }
+  });
+
+  $self->on(finish => sub {
+    app->log->debug('Client disconnected');
+    delete $clients->{$id};
+  });
 };
 
-my ($harry, $sally, $he_says, $she_says);
 $sally = new Chatbot::Eliza "Sally";
 $harry = new Chatbot::Eliza "Harry";
 $he_says  = "I am sad.";
 
 my $id = Mojo::IOLoop->recurring(3 => sub {
   my $self = shift;
-  $she_says = $sally->transform($he_says);
+  $she_says = $sally->transform($someone_says || $he_says);
+  $someone_says = undef;
   chat($sally->name.": $she_says");
   my $id = Mojo::IOLoop->timer(1 => sub {
-    $he_says = $harry->transform($she_says);
+    $he_says = $harry->transform($someone_says || $she_says);
+    $someone_says = undef;
     chat($harry->name.": $he_says");
   });
 });
@@ -79,10 +85,6 @@ __DATA__
           height:10em;
       }
     </style>
-    <script>
-      $('textarea').on('change',function(){
-      });
-    </script>
   </head>
 <body>
 
@@ -92,7 +94,7 @@ __DATA__
 </body>
 </html>
 
-@@ js/ws.js
+@@ ws.js.ep
 $(function () {
   $('#msg').focus();
 
@@ -101,7 +103,7 @@ $(function () {
     $('#log').scrollTop($('#log')[0].scrollHeight);
   };
 
-  var ws = new WebSocket('ws://chat.dev.kit.cm/echo');
+  var ws = new WebSocket('<%= url_for('echo')->to_abs %>');
   ws.onopen = function () {
     log('Connection opened');
   };
