@@ -350,6 +350,7 @@ p { margin: 0; font-size: 12px; }
 }
 
 .chat-input {
+  background: #fff;
   position: fixed;
   height: 50px;
   bottom: 0px;
