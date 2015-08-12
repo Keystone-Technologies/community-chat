@@ -318,6 +318,7 @@ p { margin: 0; font-size: 12px; }
 
 .chat {
     background: #fff;
+    display: flex;
 }
 
 .chat-history {
@@ -352,7 +353,7 @@ p { margin: 0; font-size: 12px; }
 .chat-input {
   background: #fff;
   width: 100%;
-  position: fixed;
+  //position: fixed;
   height: 50px;
   bottom: 0px;
 }
