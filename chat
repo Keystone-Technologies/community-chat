@@ -309,7 +309,7 @@ p { margin: 0; }
 
 .chat-message {
     //margin: 16px 0;
- background: green;
+ //background: green;
 }
 
 .chat-message img {
@@ -319,7 +319,7 @@ p { margin: 0; }
 
 .chat-message-content {
     margin-left: 56px;
- background: blue;
+ //background: blue;
 }
 
 .chat-time {
