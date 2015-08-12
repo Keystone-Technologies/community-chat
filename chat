@@ -115,9 +115,7 @@ __DATA__
 
 <div id="live-chat">
     <header class="clearfix">
-        <a href="#" class="chat-close">x</a>
-        <h4>John Doe</h4>
-        <span class="chat-message-counter">3</span>
+        <h4>Community Chat</h4>
     </header>
     <div class="chat">
         <div id="log" class="chat-history">
@@ -276,7 +274,7 @@ p { margin: 0; font-size: 12px; }
 }
 
 #live-chat form {
-    padding: 24px;
+    //padding: 24px;
 }
 
 #live-chat input[type="text"] {
