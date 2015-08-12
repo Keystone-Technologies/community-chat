@@ -244,7 +244,7 @@ p { margin: 0; }
     font-size: 12px;
     //right: 24px;
     //position: fixed;
-    width: 300px;
+    width: 100%;
 }
 
 #live-chat header {
@@ -282,7 +282,7 @@ p { margin: 0; }
     border-radius: 3px;
     padding: 8px;
     outline: none;
-    width: 234px;
+    width: 90%;
 }
 
 .chat-message-counter {
