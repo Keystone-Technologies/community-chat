@@ -120,6 +120,7 @@ __DATA__
     <div class="chat">
         <div id="log" class="chat-history">
         </div>
+<!--
         <div class="chat-input">
             <p class="chat-feedback">Your partner is typing…</p>
             <form action="#" method="post">
@@ -129,6 +130,7 @@ __DATA__
                 </fieldset>
             </form>
         </div>
+-->
     </div>
 </div>
 
