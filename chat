@@ -3,6 +3,7 @@ use utf8;
 use Mojolicious::Lite;
 use DateTime;
 
+use Digest::MD5 'md5_hex';
 use Chatbot::Eliza
 
 # Seed the random number generator.
@@ -13,6 +14,7 @@ get '/' => sub {
   $c->session->{user} = $c->param('user');
 } => 'index';
 get '/js/ws' => 'ws';
+get '/css/chat' => 'chat';
 
 my $clients = {};
 
@@ -35,10 +37,7 @@ websocket '/echo' => sub {
     my $dt   = DateTime->now( time_zone => 'America/Chicago');
 
     for (keys %$clients) {
-      $clients->{$_}->send({json => {
-        hms  => $dt->hms,
-        text => "$user: $msg",
-      }});
+      $clients->{$_}->send($msg);
     }
   });
 
@@ -56,24 +55,33 @@ my $id = Mojo::IOLoop->recurring(3 => sub {
   my $self = shift;
   $she_says = $sally->transform($user_says || $he_says);
   $user_says = undef;
-  chat($sally->name.": $she_says");
+  chat($sally->name, $she_says);
   my $id = Mojo::IOLoop->timer(1 => sub {
     $he_says = $harry->transform($user_says || $she_says);
     $user_says = undef;
-    chat($harry->name.": $he_says");
+    chat($harry->name, $he_says);
   });
 });
 
 app->start;
 
 sub chat {
-  my $msg = shift;
+  my ($user, $msg) = @_;
   my $dt = DateTime->now( time_zone => 'America/Chicago');
+  my $hms = $dt->hms;
+  my $md5 = md5_hex($user);
   for (keys %$clients) {
-    $clients->{$_}->send({json => {
-      hms  => $dt->hms,
-      text => $msg,
-    }});
+    $clients->{$_}->send(<<EOF);
+<div class="chat-message clearfix">
+    <img src="http://gravatar.com/avatar/$md5?d=wavatar&s=32" alt="" width="32" height="32">
+    <div class="chat-message-content clearfix">
+        <span class="chat-time">$hms</span>
+        <h5>$user</h5>
+        <p>$msg</p>
+    </div>
+</div>
+<hr>
+EOF
   }
 }
 
@@ -82,6 +90,8 @@ __DATA__
 <html>
   <head>
     <title>WebSocket Client</title>
+    <link href="/css/chat.css" rel="stylesheet">
+    <link href="http://localhost:3000/tenant/css" rel="stylesheet">
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     <script type="text/javascript" src="/js/ws.js"></script>
     <style type="text/css">
@@ -103,8 +113,24 @@ __DATA__
   </head>
 <body>
 
-<textarea id="log" readonly></textarea>
-<p><input type="text" id="msg" /></p>
+<div id="live-chat">
+    <header class="clearfix">
+        <a href="#" class="chat-close">x</a>
+        <h4>John Doe</h4>
+        <span class="chat-message-counter">3</span>
+    </header>
+    <div class="chat">
+        <div id="log" class="chat-history">
+        </div>
+        <p class="chat-feedback">Your partner is typing…</p>
+        <form action="#" method="post">
+            <fieldset>
+                <input type="text" id="msg" placeholder="Type your message…" autofocus>
+                <input type="hidden">
+            </fieldset>
+        </form>
+    </div>
+</div>
 
 </body>
 </html>
@@ -113,9 +139,10 @@ __DATA__
 $(function () {
   $('#msg').focus();
 
-  var log = function (text) {
-    $('#log').val( $('#log').val() + text + "\n");
-    $('#log').scrollTop($('#log')[0].scrollHeight);
+  var log = function (html) {
+    //$('#log').val( $('#log').val() + text + "\n");
+    $('#log').append(html);
+    //$('#log').scrollTop($('#log')[0].scrollHeight);
   };
 
   var ws = new WebSocket('<%= url_for('echo')->to_abs %>');
@@ -124,8 +151,9 @@ $(function () {
   };
 
   ws.onmessage = function (msg) {
-    var res = JSON.parse(msg.data);
-    log('[' + res.hms + '] ' + res.text); 
+    //var res = JSON.parse(msg.data);
+console.log(msg.data);
+    log(msg.data);
   };
 
   $('#msg').keydown(function (e) {
@@ -134,4 +162,189 @@ $(function () {
       $('#msg').val('');
     }
   });
+
+/*
+  $('#live-chat header').on('click', function() {
+      $('.chat').slideToggle(300, 'swing');
+      $('.chat-message-counter').fadeToggle(300, 'swing');
+  });
+
+  $('.chat-close').on('click', function(e) {
+      e.preventDefault();
+      $('#live-chat').fadeOut(300);
+  });
+*/
 });
+
+@@ chat.css.ep
+@charset "utf-8";
+/* CSS Document */
+
+/* ---------- GENERAL ---------- */
+
+body {
+    background: #e9e9e9;
+    color: #9a9a9a;
+    font: 100%/1.5em "Droid Sans", sans-serif;
+    margin: 0;
+}
+
+a { text-decoration: none; }
+
+fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+h4, h5 {
+    line-height: 1.5em;
+    margin: 0;
+}
+
+hr {
+    background: #e9e9e9;
+    border: 0;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    height: 1px;
+    margin: 0;
+    min-height: 1px;
+}
+
+img {
+    border: 0;
+    display: block;
+    height: auto;
+    max-width: 100%;
+}
+
+input {
+    border: 0;
+    color: inherit;
+    font-family: inherit;
+    font-size: 100%;
+    line-height: normal;
+    margin: 0;
+}
+
+p { margin: 0; }
+
+.clearfix { *zoom: 1; } /* For IE 6/7 */
+.clearfix:before, .clearfix:after {
+    content: "";
+    display: table;
+}
+.clearfix:after { clear: both; }
+
+/* ---------- LIVE-CHAT ---------- */
+
+#live-chat {
+    bottom: 0;
+    font-size: 12px;
+    //right: 24px;
+    //position: fixed;
+    width: 300px;
+}
+
+#live-chat header {
+    background: #293239;
+    border-radius: 5px 5px 0 0;
+    color: #fff;
+    cursor: pointer;
+    padding: 16px 24px;
+}
+
+#live-chat h4:before {
+    background: #1a8a34;
+    border-radius: 50%;
+    content: "";
+    display: inline-block;
+    height: 8px;
+    margin: 0 8px 0 0;
+    width: 8px;
+}
+
+#live-chat h4 {
+    font-size: 12px;
+}
+
+#live-chat h5 {
+    font-size: 10px;
+}
+
+#live-chat form {
+    padding: 24px;
+}
+
+#live-chat input[type="text"] {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 8px;
+    outline: none;
+    width: 234px;
+}
+
+.chat-message-counter {
+    background: #e62727;
+    border: 1px solid #fff;
+    border-radius: 50%;
+    display: none;
+    font-size: 12px;
+    font-weight: bold;
+    height: 28px;
+    left: 0;
+    line-height: 28px;
+    margin: -15px 0 0 -15px;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    width: 28px;
+}
+
+.chat-close {
+    background: #1b2126;
+    border-radius: 50%;
+    color: #fff;
+    display: block;
+    float: right;
+    font-size: 10px;
+    height: 16px;
+    line-height: 16px;
+    margin: 2px 0 0 0;
+    text-align: center;
+    width: 16px;
+}
+
+.chat {
+    background: #fff;
+}
+
+.chat-history {
+    height: 252px;
+    padding: 8px 24px;
+    overflow-y: scroll;
+}
+
+.chat-message {
+    margin: 16px 0;
+}
+
+.chat-message img {
+    border-radius: 50%;
+    float: left;
+}
+
+.chat-message-content {
+    margin-left: 56px;
+}
+
+.chat-time {
+    float: right;
+    font-size: 10px;
+}
+
+.chat-feedback {
+    font-style: italic; 
+    margin: 0 0 0 80px;
+}
