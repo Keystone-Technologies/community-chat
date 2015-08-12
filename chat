@@ -323,10 +323,9 @@ p { margin: 0; font-size: 12px; }
 }
 
 .chat-history {
-    height: 108px;
+    //height: 108px;
     //padding: 8px 24px;
     overflow-y: scroll;
-    margin-bottom: 50px;
 }
 
 .chat-message {
