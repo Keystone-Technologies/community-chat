@@ -122,15 +122,15 @@ __DATA__
     <div class="chat">
         <div id="log" class="chat-history">
         </div>
-    </div>
-    <div>
-        <p class="chat-feedback">Your partner is typing…</p>
-        <form action="#" method="post">
-            <fieldset>
-                <input type="text" id="msg" placeholder="Type your message…" autofocus>
-                <input type="hidden">
-            </fieldset>
-        </form>
+        <div class="chat-input">
+            <p class="chat-feedback">Your partner is typing…</p>
+            <form action="#" method="post">
+                <fieldset>
+                    <input type="text" id="msg" placeholder="Type your message…" autofocus>
+                    <input type="hidden">
+                </fieldset>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -349,4 +349,9 @@ p { margin: 0; font-size: 12px; }
 .chat-feedback {
     font-style: italic; 
     margin: 0 0 0 80px;
+}
+
+.chat-input {
+  position: fixed;
+  bottom: 0px;
 }
