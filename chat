@@ -304,10 +304,12 @@ p { margin: 0; }
     height: 100%;
     padding: 8px 24px;
     overflow-y: scroll;
+ color: red;
 }
 
 .chat-message {
     //margin: 16px 0;
+ color: green;
 }
 
 .chat-message img {
@@ -317,6 +319,7 @@ p { margin: 0; }
 
 .chat-message-content {
     margin-left: 56px;
+ color: blue;
 }
 
 .chat-time {
