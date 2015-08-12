@@ -297,7 +297,7 @@ p { margin: 0; }
 }
 
 .chat {
-    //background: #fff;
+    background: #fff;
 }
 
 .chat-history {
