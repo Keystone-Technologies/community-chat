@@ -114,13 +114,11 @@ __DATA__
 <body>
 
 <div id="live-chat">
-<!--
     <header class="clearfix">
         <a href="#" class="chat-close">x</a>
         <h4>John Doe</h4>
         <span class="chat-message-counter">3</span>
     </header>
--->
     <div class="chat">
         <div id="log" class="chat-history">
         </div>
@@ -254,7 +252,7 @@ p { margin: 0; }
     border-radius: 5px 5px 0 0;
     color: #fff;
     cursor: pointer;
-    padding: 16px 24px;
+    //padding: 16px 24px;
 }
 
 #live-chat h4:before {
