@@ -230,7 +230,7 @@ input {
     margin: 0;
 }
 
-p { margin: 0; font-size: 12px; }
+p { margin: 0; }
 
 .clearfix { *zoom: 1; } /* For IE 6/7 */
 .clearfix:before, .clearfix:after {
@@ -323,8 +323,8 @@ p { margin: 0; font-size: 12px; }
 }
 
 .chat-history {
-    //height: 108px;
-    //padding: 8px 24px;
+    height: 100%;
+    padding: 8px 24px;
     overflow-y: scroll;
 }
 
