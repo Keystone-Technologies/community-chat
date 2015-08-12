@@ -228,7 +228,7 @@ input {
     margin: 0;
 }
 
-p { margin: 0; }
+p { margin: 0; font-size: 12px; }
 
 .clearfix { *zoom: 1; } /* For IE 6/7 */
 .clearfix:before, .clearfix:after {
