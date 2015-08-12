@@ -141,21 +141,14 @@ __DATA__
 $(function () {
   $('#msg').focus();
 
-  var log = function (html) {
-    //$('#log').val( $('#log').val() + text + "\n");
-    $('#log').append(html);
-    //$('#log').scrollTop($('#log')[0].scrollHeight);
-  };
-
   var ws = new WebSocket('<%= url_for('echo')->to_abs %>');
   ws.onopen = function () {
     log('Connection opened');
   };
 
   ws.onmessage = function (msg) {
-    //var res = JSON.parse(msg.data);
-console.log(msg.data);
-    log(msg.data);
+    $('#log').append(msg.data);
+    $('#log').scrollTop($('#log')[0].scrollHeight);
   };
 
   $('#msg').keydown(function (e) {
@@ -165,17 +158,6 @@ console.log(msg.data);
     }
   });
 
-/*
-  $('#live-chat header').on('click', function() {
-      $('.chat').slideToggle(300, 'swing');
-      $('.chat-message-counter').fadeToggle(300, 'swing');
-  });
-
-  $('.chat-close').on('click', function(e) {
-      e.preventDefault();
-      $('#live-chat').fadeOut(300);
-  });
-*/
 });
 
 @@ chat.css.ep
