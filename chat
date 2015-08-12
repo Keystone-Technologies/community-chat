@@ -122,6 +122,8 @@ __DATA__
     <div class="chat">
         <div id="log" class="chat-history">
         </div>
+    </div>
+    <div>
         <p class="chat-feedback">Your partner is typing…</p>
         <form action="#" method="post">
             <fieldset>
@@ -321,7 +323,7 @@ p { margin: 0; font-size: 12px; }
 }
 
 .chat-history {
-    //height: 252px;
+    height: 252px;
     padding: 8px 24px;
     overflow-y: scroll;
 }
