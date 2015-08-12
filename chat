@@ -319,10 +319,11 @@ p { margin: 0; font-size: 12px; }
 .chat {
     background: #fff;
     display: flex;
+    flex-direction: column;
 }
 
 .chat-history {
-    height: 100;
+    //height: 100px;
     //padding: 8px 24px;
     overflow-y: scroll;
 }
