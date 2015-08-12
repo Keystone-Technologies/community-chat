@@ -114,11 +114,13 @@ __DATA__
 <body>
 
 <div id="live-chat">
+<!--
     <header class="clearfix">
         <a href="#" class="chat-close">x</a>
         <h4>John Doe</h4>
         <span class="chat-message-counter">3</span>
     </header>
+-->
     <div class="chat">
         <div id="log" class="chat-history">
         </div>
@@ -198,7 +200,7 @@ fieldset {
 }
 
 h4, h5 {
-    line-height: 1.5em;
+//    line-height: 1.5em;
     margin: 0;
 }
 
@@ -239,7 +241,7 @@ p { margin: 0; }
 
 /* ---------- LIVE-CHAT ---------- */
 
-#live-chat {
+#l	ive-chat {
     bottom: 0;
     font-size: 12px;
     //right: 24px;
@@ -295,7 +297,7 @@ p { margin: 0; }
     height: 28px;
     left: 0;
     line-height: 28px;
-    margin: -15px 0 0 -15px;
+    //margin: -15px 0 0 -15px;
     position: absolute;
     text-align: center;
     top: 0;
