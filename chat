@@ -254,7 +254,7 @@ p { margin: 0; }
 }
 
 #live-chat form {
-    //padding: 24px;
+    padding: 24px;
 }
 
 #live-chat input[type="text"] {
@@ -297,7 +297,7 @@ p { margin: 0; }
 }
 
 .chat {
-    background: #fff;
+    //background: #fff;
 }
 
 .chat-history {
@@ -308,7 +308,7 @@ p { margin: 0; }
 }
 
 .chat-message {
-    //margin: 16px 0;
+    margin: 16px 0;
  background: green;
 }
 
