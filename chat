@@ -327,7 +327,7 @@ p { margin: 0; }
 }
 
 .chat-message {
-    margin: 16px 0;
+    //margin: 16px 0;
 }
 
 .chat-message img {
