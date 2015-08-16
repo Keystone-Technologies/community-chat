@@ -12,6 +12,7 @@ srand( time ^ ($$ + ($$ << 15)) );
 get '/' => sub {
   my $c = shift;
   $c->session->{user} = $c->param('user');
+  $c->stash(referrer => Mojo::URL->new($c->req->headers->referrer)->host_port);
 } => 'index';
 get '/js/ws' => 'ws';
 get '/css/chat' => 'chat';
@@ -91,7 +92,7 @@ __DATA__
   <head>
     <title>WebSocket Client</title>
     <link href="/css/chat.css" rel="stylesheet">
-    <link href="http://localhost:3000/tenant/css" rel="stylesheet">
+    <link href="//<%= $referrer || 'localhost:3000' %>/css/style.css" rel="stylesheet">
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     <script type="text/javascript" src="/js/ws.js"></script>
     <style type="text/css">
